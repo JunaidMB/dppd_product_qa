@@ -8,7 +8,7 @@ This repository contains code which uses Retrieval Augmented Generation (RAG) to
 
 2. Reduce latency: The response is not fast (~2 seconds). The workflow must be optimised to use appropriate data structures (Polars vs Pandas), make all lists into arrays and explore a faster search index.
 
-3. Include screening for unsuitable queries: Some queries do not need to be entertained by the workflow or may be too simple to require a similarity search - thereby requiring a lookup. Need to add logic before the search workflow to deal with these queries without using the RAG workflow.
+3. Include screening for unsuitable queries: Some queries do not need to be entertained by the workflow or may be too simple to require a similarity search - thereby requiring a lookup. Need to add logic before the search workflow to deal with these queries without using the RAG workflow. Another example is when we ask global questions like "How many products are there?" or "what is the cheapest product?". This method is good at retrieving product level information but not good at answering global and cross catalogue levels questions. This is a limitation of the restrictive retrival and rerank parameter settings. Maybe we can construct a metadata structure to contain global data or we can explore tree of thought prompting.
 
 4. Explore ways to reduce hallucination: There is an odd behaviour where the product name is altered to fit a user query (but product price and description is identical). The model fabricates products similar to catalogue products to appeal to the user. Need to address way to control this.
 
