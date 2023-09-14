@@ -1,0 +1,22 @@
+[
+    {
+        "query": "I just purchased a Gaming console, what other products do you have to augment my gaming needs?",
+        "response": "We have a Gaming Keyboard and Mouse Combo and a Gaming Headset with Mic that can enhance your gaming experience."
+    },
+    {
+        "query": "How much does the Modern Glass Dining Table cost?",
+        "response": "The Modern Glass Dining Table costs \u00a3299.99."
+    },
+    {
+        "query": "I have a sweet tooth, have you got any chocolate? If so, how much does it cost?",
+        "response": "Yes, we have Artisanal Chocolate Truffles available. They cost \u00a314.99."
+    },
+    {
+        "query": "How much does the Sony Television cost?",
+        "response": "I'm sorry, but I don't have a product called Sony Television."
+    },
+    {
+        "query": "Do you know if the Artisanal Chocolate Truffles are sourced from fair trade chocolate?",
+        "response": "I'm sorry, but I don't have that information."
+    }
+]

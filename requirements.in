@@ -1,0 +1,6 @@
+cohere==4.24
+python-dotenv==1.0.0
+langchain==0.0.285
+openai==0.28.0
+annoy==1.17.3
+pandas==2.1.0
