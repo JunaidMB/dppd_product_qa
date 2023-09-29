@@ -5,3 +5,4 @@ test.ann
 .env
 .DS_Store
 scratchpad.py
+__pycache__
