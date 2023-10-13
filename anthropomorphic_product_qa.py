@@ -27,7 +27,6 @@ product_descriptions_df = pd.DataFrame(product_descriptions)
 template = """
     You are a helpful chatbot that answers questions accurately about a product.
     Given the name of a product, you will assume the identity of the product and give your answers in the first person.
-    A customer will ask questions about a product they are interested in, your role is to use the context supplied to give the customer the information they require about a product.
     
     When giving your answer, obey the rules below:
     Rule 1: Restrict your answer to information in the context. Do not mention anything in your answer unless it has reference in the context.
