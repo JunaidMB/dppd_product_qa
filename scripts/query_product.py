@@ -10,8 +10,9 @@ from annoy import AnnoyIndex
 from dotenv import load_dotenv
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
-from langchain.prompts import PromptTemplate
+from langchain.prompts import load_prompt
 from pprint import pprint
+from pathlib import Path
 from typing import Dict, List
 import sys
 
@@ -22,7 +23,6 @@ sys.path.append(parent)
 from semantic_search_tools.create_index import create_annoy_index
 from semantic_search_tools.semantic_search import dense_retrieval, generate_llm_answer, reformat_dict
 
-
 load_dotenv(override=True)
 
 # Configure the logging settings to print logs to the console (standard output)
@@ -31,6 +31,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Initialise Cohere Client
 cohere_apikey = os.environ.get("COHERE_APIKEY")
 co = cohere.Client(cohere_apikey)
+
+prompt_dir = Path("prompt_templates")
+data_dir = Path("data/product_catalogue_data")
 
 def main(query: str, perform_rerank: bool, product_descriptions: List[Dict], rel_score_threshold: float = 0.75) -> str:
 
@@ -64,8 +67,8 @@ def main(query: str, perform_rerank: bool, product_descriptions: List[Dict], rel
     # start_time = time.time()
 
     logging.info(f"Creating Product Index")
-    index_name = "product_embedding"
-    index_name_full = "".join([index_name, ".ann"])
+    index_name = data_dir / "product_embedding"
+    index_name_full = "".join([str(index_name), ".ann"])
 
 
     create_annoy_index(data_to_index=product_description_list, index_name=index_name)
@@ -150,36 +153,16 @@ def main(query: str, perform_rerank: bool, product_descriptions: List[Dict], rel
     #     {history}
     #     Question: {question}
     #     Helpful Answer:"""
-    template = """
-    You are a helpful chatbot that answers questions accurately about a product. 
-    A customer will ask questions about a product they are interested in, your role is to use the context supplied to give the customer the information they require about a product.
     
-    When giving your answer, obey the rules below:
-    Rule 1: Restrict your answer to information in the context. Do not mention anything in your answer unless it has reference in the context.
-    Rule 2: If you don't know the answer, say that you don't know, don't try to make up an answer. 
-    Rule 3: If the product does not exist, mention that you have no product that meets a customer's requirements.
-    Rule 4: Keep the answer as concise as possible. 
-    Rule 5: Answer in the style of a customer service chatbot
-
-    We also provide a conversation history to see what a customer has asked before
-    History: {history}
-
-    Use the following pieces of context to answer the question at the end. 
-    Context: {context}
-
-    Answer the following in a step by step fashion:
-    Question: {question}
-
-    Answer:"""
-
-    QA_CHAIN_PROMPT = PromptTemplate.from_template(template)
+    # Load Product QA Prompt Template
+    dense_retrieval_product_qa_prompt = load_prompt(prompt_dir / "dense_retrieval_product_qa_prompt.json")
 
     query_response = generate_llm_answer(
         query=query,
         context=context,
         history=memory,
         llm=llm,
-        prompt=QA_CHAIN_PROMPT
+        prompt=dense_retrieval_product_qa_prompt
     )
 
     # end_time = time.time()
@@ -196,9 +179,11 @@ if __name__ == "__main__":
     parser.add_argument('--perform_rerank', action="store_true", help='Whether to perform rerank or not')
     args = parser.parse_args()
 
+
     # Load Product Descriptions
-    with open("product_descriptions.json", "r") as openfile:
+    with open(data_dir / "product_descriptions.json", "r") as openfile:
         product_descriptions = json.load(openfile)
+    
 
     main(query=args.query,
         perform_rerank=args.perform_rerank,

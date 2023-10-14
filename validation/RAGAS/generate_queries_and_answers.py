@@ -1,13 +1,11 @@
 import json
-import pandas as pd
-from datasets import Dataset
 from functools import partial
 from pprint import pprint
 from pathlib import Path
 from scripts.query_product import main
-from ragas import evaluate
 
 data_dir = Path("data/product_catalogue_data")
+save_dir = Path("data/qa_validation_data")
 
 # Load Product Descriptions
 with open(data_dir / "product_descriptions.json", "r") as openfile:
@@ -45,27 +43,8 @@ for idx, _ in enumerate(query_responses):
 
 pprint(queries_and_responses)
 
-with open(data_dir / "queries_and_responses.json", "w") as fp:
+with open(save_dir / "queries_and_responses.json", "w") as fp:
     json.dump(queries_and_responses, fp)
 
-# RAG Evaluation with RAGAS
-# Read Data
-with open(data_dir / "queries_and_responses.json", "r") as openfile:
-    queries_and_responses = json.load(openfile)
-
-# Convert Responses to HF Dataset
-queries_and_responses_df = pd.DataFrame(queries_and_responses)
-
-## Reformat columns to be consistent with RAGAS
-queries_and_responses_df = queries_and_responses_df[["query", "context", "response"]]
-queries_and_responses_df.columns = ["question", "contexts", "answer"]
-
-queries_and_responses_df["contexts"] = queries_and_responses_df['contexts'].apply(lambda x: [x])
-
-queries_and_responses_dataset = Dataset.from_pandas(queries_and_responses_df)
-queries_and_responses_dataset.reset_format()
-
-# Compute RAGAS metrics
-results = evaluate(queries_and_responses_dataset)
 
 
