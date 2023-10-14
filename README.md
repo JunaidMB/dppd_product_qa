@@ -28,6 +28,8 @@ This repository contains code which uses Retrieval Augmented Generation (RAG) to
 4. Explore ways to reduce hallucination: There is an odd behaviour where the product name is altered to fit a user query (but product price and description is identical). The model fabricates products similar to catalogue products to appeal to the user. Need to address way to control this.
 
 5. Extensive testing of queries and explore RAGAS: Include formalised testing of output. This looks interesting - [RAGAS](https://github.com/explodinggradients/ragas)
+   
+6. Look into sanitising user inputs and model outputs: Filter unsuitable, irrelevant or address repeated queries.
 
 **Note**: I used pip-tools to create requirements.txt. Use `pip-sync` inside a virtual environment to load dependencies. A Cohere API key is required.
 
@@ -35,3 +37,4 @@ This repository contains code which uses Retrieval Augmented Generation (RAG) to
 
 1. [Large Language Models with Semantic Search by Cohere](https://www.deeplearning.ai/short-courses/large-language-models-semantic-search/)
 2. [Cohere](https://cohere.com/)
+3. [Lakera Guard](https://platform.lakera.ai/docs/quickstart)
