@@ -12,9 +12,16 @@ from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
 from pprint import pprint
+from typing import Dict, List
+import sys
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+
 from semantic_search_tools.create_index import create_annoy_index
 from semantic_search_tools.semantic_search import dense_retrieval, generate_llm_answer, reformat_dict
-from typing import Dict, List
+
 
 load_dotenv(override=True)
 
